@@ -1,6 +1,8 @@
 package Game;
 
 import Cards.Card;
+import Cards.Equipments.Equipment;
+import Cards.Equipments.EquipmentType;
 import Cards.TargetType;
 import Players.Player;
 
@@ -113,6 +115,45 @@ public class ActionMenu {
             default:
                 System.out.println("Invalid option.");
                 break;
+        }
+    }
+    public static void showCatBalouMenu(Player target) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Player " + target.getName() + " is targeted by CatBalou");
+        System.out.println("Choose a card to discard: ");
+        //option 1 discard a random card from hand, other options are to discard equipments if any
+        Map<Integer, EquipmentType> keyToEquipmentMap = new HashMap<>();
+        keyToEquipmentMap.put(1, null);
+        System.out.println("1. Remove random card from hand");
+        //remove equipments from 2 onwards
+        int i = 2;
+        for(EquipmentType key : target.getEquipmentMap().keySet()){
+            if(target.getEquipmentMap().get(key) == null){
+                continue;
+            }
+            keyToEquipmentMap.put(i, key);
+            System.out.println(i + ". Remove " + key);
+            i++;
+        }
+        int key;
+        do {
+            key = scanner.nextInt();
+        } while (!keyToEquipmentMap.containsKey(key));
+        switch (key){
+            case 1:
+                //remove random card from hand
+                Random rand = new Random();
+                int randomIndex = rand.nextInt(target.getHand().size());
+                Card card = target.getHand().get(randomIndex);
+                target.removeFromHand(card);
+                target.getGameBoard().Discard(card);
+                System.out.println("Player " + target.getName() + " discards " + card.toString());
+                break;
+            default:
+                //remove equipment
+                EquipmentType equipmentType = keyToEquipmentMap.get(key);
+                target.removeEquipment(equipmentType);
+                System.out.println("Player " + target.getName() + " remove their " + equipmentType);
         }
     }
 }

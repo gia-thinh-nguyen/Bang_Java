@@ -154,6 +154,18 @@ public class Player {
     public void addToEquipmentMap(EquipmentType equipmentType, Card card){
         equipmentTypeToCardMap.put(equipmentType,card);
     }
+    public void removeEquipment(EquipmentType equipmentType){
+        Card card = equipmentTypeToCardMap.get(equipmentType);
+        equipmentTypeToCardMap.put(equipmentType,null);
+        //set to default values
+        switch (equipmentType){
+            case HORSE -> horse = 0;
+            case BARREL -> hasBarrel = false;
+            case DYNAMITE -> isDynamited = false;
+            case JAIL -> isJailed = false;
+        }
+        gameBoard.Discard(card);
+    }
     public HashMap<EquipmentType,Card> getEquipmentMap(){
         return equipmentTypeToCardMap;
     }
@@ -161,9 +173,6 @@ public class Player {
         return gameBoard;
     }
 
-    public Card checkTopCard(){
-        return gameBoard.checkTopCard();
-    }
     public void takeDamage(Player damageSource,int damage){
         //damageSource is null for dynamite
         health -= damage;

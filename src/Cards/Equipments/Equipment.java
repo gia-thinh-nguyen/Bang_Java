@@ -17,10 +17,7 @@ public class Equipment extends Cards.Card {
         //cannot have duplicate equipments
         //if already have the same equipment type, discard the old one
         //keys initialized so always contains keys
-        Card oldEquipment = getOwner().getEquipmentMap().get(equipmentType);
-        if(oldEquipment != null){
-            getOwner().getGameBoard().Discard(oldEquipment);
-        }
+        getOwner().removeEquipment(equipmentType);
         getOwner().addToEquipmentMap(equipmentType,this); //not for jail
     }
 
