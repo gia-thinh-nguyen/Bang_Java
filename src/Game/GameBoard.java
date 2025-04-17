@@ -43,4 +43,7 @@ public class GameBoard {
     public Stack<Card> getDrawPile() {
         return drawPile;
     }
+    public Stack<Card> getDiscardPile() {
+        return discardPile;
+    }
 }

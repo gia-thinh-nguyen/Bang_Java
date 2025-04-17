@@ -11,6 +11,7 @@ public class Stagecoach extends Card {
     }
     @Override
     public void played() {
+        super.played();
         getOwner().draw(2);
     }
 }

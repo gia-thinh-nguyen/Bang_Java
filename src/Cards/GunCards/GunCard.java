@@ -14,6 +14,8 @@ public class GunCard extends Card {
     }
     @Override
     public void played() {
+        super.played();
         getOwner().setGunRange(range);
+        getOwner().addToEquipments(this);
     }
 }

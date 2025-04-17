@@ -31,11 +31,7 @@ public abstract class Card {
         return name + " " + labelString + suitString;
     }
     public void played(){
-        played(null);
-    }
-    public void played(Player target){
         owner.removeFromHand(this);
-
     }
     public void setOwner(Player owner){
         this.owner = owner;

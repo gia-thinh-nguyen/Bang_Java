@@ -11,6 +11,7 @@ public class Beer extends Card {
 
     @Override
     public void played(){
+        super.played();
         for(Player player: getOwner().getPlayers()){
             player.heal();
         }

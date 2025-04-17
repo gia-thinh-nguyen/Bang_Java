@@ -22,7 +22,7 @@ public class Player {
     private boolean bangUnlimited;
     private boolean isAlive;
     private ArrayList<Card> hand;
-    private ArrayList<Card> equipments;
+    private ArrayList<Card> equipments = new ArrayList<>();
     private final GameBoard gameBoard;
     private final Game game;
     public Player(String name,Game game, GameBoard gameBoard, Role role, Character character){
@@ -46,20 +46,27 @@ public class Player {
     }
     @Override
     public String toString(){
-        String sb = "Player: " + getName() + " " +
-                "Health: " + health + "/" + maxHealth + " " +
-                "Gun Range: " + gunRange + " " +
-                "Horse: " + horse + " " +
-                "Barrel: " + hasBarrel + " " +
-                "Dynamited: " + isDynamited + " " +
-                "Jailed: " + isJailed + " " +
-                "Role: " + role.toString() + " " +
-                "Character: " + character.toString() + " ";
+        String handString = "";
+        for(Card card : hand){
+            handString += card.toString() + ", ";
+        }
+        String sb = "Player:" + getName() + " " +
+                "Health:" + health + "/" + maxHealth + " " +
+                "Gun Range:" + gunRange + " " +
+                "Horse:" + horse + " " +
+                "Barrel:" + hasBarrel + " " +
+                "Dynamited:" + isDynamited + " " +
+                "Jailed:" + isJailed + " " +
+                "Role:" + role.toString() + " " +
+                "Character:" + character.toString() + "\n" +
+                "     Hand: " + handString;
+
         return sb;
     }
     public void draw(int numCards){
         for(int i=0; i<numCards; i++){
             Card card = gameBoard.DrawFromPile();
+            card.setOwner(this);
             hand.add(card);
         }
     }
@@ -96,11 +103,23 @@ public class Player {
     public String getName(){
         return name;
     }
+    public ArrayList<Card> getHand(){
+        return hand;
+    }
+    public int getGunRange(){
+        return gunRange;
+    }
     public boolean isSheriff(){
         return isSheriff;
     }
+
     public void removeFromHand(Card card){
-        hand.remove(card);
+        for (Card c : hand){
+            if(c.equals(card)){
+                hand.remove(c);
+                break;
+            }
+        }
     }
     public void addToEquipments(Card card){
         equipments.add(card);

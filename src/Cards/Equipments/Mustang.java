@@ -10,6 +10,7 @@ public class Mustang extends Card{
 
     @Override
     public void played() {
+        super.played();
         getOwner().setHorse(1);
         getOwner().addToEquipments(this);
     }

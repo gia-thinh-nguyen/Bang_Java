@@ -17,17 +17,28 @@ public class Game {
         CreateAndAddPlayers(gameBoard, this);
     }
     public void PlayGame(){
-        for(Card card : gameBoard.getDrawPile()){
-            System.out.println(card);
+        for(Player player: players){
+            player.draw(2);
+        }
+        while(true){
+            System.out.println("----------------------");
+
+            for(Player player: players){
+                System.out.println(player);
+            }
+            System.out.println("Draw pile: " + gameBoard.getDrawPile().size() + ","+
+                    " Discard top: " + (gameBoard.getDiscardPile().isEmpty() ? "None" : gameBoard.getDiscardPile().peek()));            System.out.println("----------------------");
+            System.out.println("Current Player: " + players.peek());
+            Card chosenCard=ActionMenu.showMenu(players.peek().getHand());
+            chosenCard.played();
         }
     }
     public void CreateAndAddPlayers(GameBoard gameBoard, Game game){
         players.add(new Player("1",game,gameBoard, Role.OUTLAW, Character.PAUL_REGRET));
         players.add(new Player("2",game,gameBoard, Role.SHERIFF, Character.WILLY_THE_KID));
         players.add(new Player("3",game,gameBoard, Role.OUTLAW, Character.JOURDONNAIS));
-        players.add(new Player("4",game,gameBoard, Role.OUTLAW, Character.ROSE_DOOLAN));
-        //sheriff first to queue then add the rest of the players
-        this.players.addAll(players);
+        players.add(new Player("4",game,gameBoard, Role.VICE, Character.ROSE_DOOLAN));
+        //sheriff plays first
         while(!this.players.peek().isSheriff()) {
             nextTurn();
         }

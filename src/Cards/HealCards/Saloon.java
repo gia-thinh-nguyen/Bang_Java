@@ -12,6 +12,7 @@ public class Saloon extends Card {
 
     @Override
     public void played() {
+        super.played();
        //heal all players
         for (Player player : getOwner().getPlayers()) {
             player.heal();
