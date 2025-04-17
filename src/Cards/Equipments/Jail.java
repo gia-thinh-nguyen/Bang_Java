@@ -6,9 +6,9 @@ import Cards.SUIT;
 import Game.ActionMenu;
 import Players.Player;
 
-public class Jail extends Card {
+public class Jail extends Equipment {
     public Jail(LABEL label, SUIT suit) {
-        super(label, suit, "Jail");
+        super(label, suit, "Jail", EquipmentType.JAIL);
     }
 
     @Override
@@ -16,6 +16,5 @@ public class Jail extends Card {
         super.played();
         Player target = ActionMenu.showTargetablePlayer(getOwner().getPlayers(),getOwner().getGunRange());
         target.setJailed(true);
-        target.addToEquipments(this);
     }
 }

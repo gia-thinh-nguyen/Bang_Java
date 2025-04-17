@@ -6,9 +6,9 @@ import Cards.SUIT;
 import Game.ActionMenu;
 import Players.Player;
 
-public class Dynamite extends Card {
+public class Dynamite extends Equipment {
     public Dynamite(LABEL label, SUIT suit) {
-        super(label, suit, "Dynamite");
+        super(label, suit, "Dynamite", EquipmentType.DYNAMITE);
     }
 
     @Override
@@ -16,6 +16,5 @@ public class Dynamite extends Card {
         super.played();
         Player target = ActionMenu.showTargetablePlayer(getOwner().getPlayers(),getOwner().getGunRange());
         target.setDynamited(true);
-        target.addToEquipments(this);
     }
 }

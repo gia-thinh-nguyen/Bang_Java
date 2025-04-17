@@ -1,10 +1,12 @@
 package Players;
 
 import Cards.Card;
+import Cards.Equipments.EquipmentType;
 import Game.GameBoard;
 import Game.Game;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Queue;
 
 public class Player {
@@ -22,7 +24,7 @@ public class Player {
     private boolean bangUnlimited;
     private boolean isAlive;
     private ArrayList<Card> hand;
-    private ArrayList<Card> equipments = new ArrayList<>();
+    private HashMap<EquipmentType,Card> equipmentTypeToCardMap = new HashMap<>();
     private final GameBoard gameBoard;
     private final Game game;
     public Player(String name,Game game, GameBoard gameBoard, Role role, Character character){
@@ -43,10 +45,23 @@ public class Player {
         this.gameBoard = gameBoard;
         this.isAlive = true;
         this.bangUnlimited = false;
+
+        // Initialize the equipmentTypeToCardMap with all keys from EquipmentType
+        for (EquipmentType equipmentType : EquipmentType.values()) {
+            equipmentTypeToCardMap.put(equipmentType, null);
+        }
     }
     @Override
     public String toString(){
         String handString = "";
+        String equipmentString = "";
+        for(EquipmentType equipmentType : equipmentTypeToCardMap.keySet()){
+            Card card = equipmentTypeToCardMap.get(equipmentType);
+            if(card==null){
+                continue;
+            }
+            equipmentString += equipmentType + ": " + equipmentTypeToCardMap.get(equipmentType).toString() + ", ";
+        }
         for(Card card : hand){
             handString += card.toString() + ", ";
         }
@@ -59,7 +74,9 @@ public class Player {
                 "Jailed:" + isJailed + " " +
                 "Role:" + role.toString() + " " +
                 "Character:" + character.toString() + "\n" +
-                "     Hand: " + handString;
+                "     Hand: " + handString+ "\n" +
+                "     Equipment: " + equipmentString + "\n";
+
 
         return sb;
     }
@@ -121,7 +138,13 @@ public class Player {
             }
         }
     }
-    public void addToEquipments(Card card){
-        equipments.add(card);
+    public void addToEquipmentMap(EquipmentType equipmentType, Card card){
+        equipmentTypeToCardMap.put(equipmentType,card);
+    }
+    public HashMap<EquipmentType,Card> getEquipmentMap(){
+        return equipmentTypeToCardMap;
+    }
+    public GameBoard getGameBoard(){
+        return gameBoard;
     }
 }

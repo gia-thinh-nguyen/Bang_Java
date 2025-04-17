@@ -32,6 +32,7 @@ public abstract class Card {
     }
     public void played(){
         owner.removeFromHand(this);
+        owner.getGameBoard().Discard(this);
     }
     public void setOwner(Player owner){
         this.owner = owner;
