@@ -1,6 +1,5 @@
 package Cards.Equipments;
 
-import Cards.Card;
 import Cards.LABEL;
 import Cards.SUIT;
 public class Mustang extends Equipment{

@@ -1,4 +1,4 @@
-package Cards.GunCards;
+package Cards.Equipments.GunCards;
 
 
 import Cards.LABEL;

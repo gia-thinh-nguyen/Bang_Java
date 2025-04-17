@@ -1,6 +1,7 @@
 package Game;
 
 import Cards.Card;
+import Cards.TargetType;
 import Players.Player;
 
 import java.util.*;
@@ -20,26 +21,31 @@ public class ActionMenu {
         } while (!keyToCardMap.containsKey(key));
         return keyToCardMap.get(key);
     }
-    public static Player showTargetablePlayer(Queue<Player> playerQueue, int range){
+    public static Player showTargetablePlayer(Player currentPlayer, TargetType targetType) {
         System.out.println("Choose a target :");
         Scanner scanner = new Scanner(System.in);
         Map<Integer, Player> keyToPlayerMap = new HashMap<>();
-        List<Player> players = new ArrayList<>(playerQueue);
-        //add clockwise players
-        for(int i=1; i<=range;i++){
-            keyToPlayerMap.put(i, players.get(i));
-            System.out.println(i + ". Player: " + players.get(i));
+        List<Player> players = new ArrayList<>(currentPlayer.getPlayers());
+        ArrayList<Player> targetablePlayers = new ArrayList<>();
+        int range = (targetType==TargetType.PANIC ? 1: currentPlayer.getGunRange()) + (currentPlayer.getHorse() == -1 ? 1:0);
+        for (int i = 1; i< players.size();i++){
+            boolean isTargetable = (i<=range || players.size()-i<=range) ||
+                    (players.get(i).getHorse()==1 && (i<=range-1 || players.size()-i<=range-1));
+            if(targetType==TargetType.CATBALOU || targetType==TargetType.DUEL ||
+                targetType==TargetType.JAIL && !players.get(i).isSheriff() ||
+                (targetType==TargetType.BANG||targetType==TargetType.PANIC)&& isTargetable){
+                targetablePlayers.add(players.get(i));
+            }
         }
-        //add counter-clockwise players
-        for(int i=1; i<=range;i++){
-            keyToPlayerMap.put(i+range, players.get(players.size()-i));
-            System.out.println((i+range) + ". Player: " + players.get(players.size()-i));
+        for(int i=1; i<targetablePlayers.size(); i++){
+            keyToPlayerMap.put(i, targetablePlayers.get(i-1));
+            System.out.println((i) + ". " + targetablePlayers.get(i-1).toString());
         }
+
         int key;
         do {
             key = scanner.nextInt();
         } while (!keyToPlayerMap.containsKey(key));
         return keyToPlayerMap.get(key);
-
     }
 }

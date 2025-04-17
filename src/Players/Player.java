@@ -75,7 +75,7 @@ public class Player {
                 "Role:" + role.toString() + " " +
                 "Character:" + character.toString() + "\n" +
                 "     Hand: " + handString+ "\n" +
-                "     Equipment: " + equipmentString + "\n";
+                "     Equipment: " + equipmentString;
 
 
         return sb;
@@ -125,6 +125,9 @@ public class Player {
     }
     public int getGunRange(){
         return gunRange;
+    }
+    public int getHorse(){
+        return horse;
     }
     public boolean isSheriff(){
         return isSheriff;

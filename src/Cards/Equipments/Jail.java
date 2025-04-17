@@ -1,8 +1,8 @@
 package Cards.Equipments;
 
-import Cards.Card;
 import Cards.LABEL;
 import Cards.SUIT;
+import Cards.TargetType;
 import Game.ActionMenu;
 import Players.Player;
 
@@ -14,7 +14,7 @@ public class Jail extends Equipment {
     @Override
     public void played() {
         super.played();
-        Player target = ActionMenu.showTargetablePlayer(getOwner().getPlayers(),getOwner().getGunRange());
+        Player target = ActionMenu.showTargetablePlayer(getOwner(), TargetType.JAIL);
         target.setJailed(true);
     }
 }

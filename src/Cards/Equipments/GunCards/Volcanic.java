@@ -1,8 +1,8 @@
-package Cards.GunCards;
+package Cards.Equipments.GunCards;
 
 import Cards.LABEL;
 import Cards.SUIT;
-import Players.Player;
+
 public class Volcanic extends GunCard {
     public Volcanic(LABEL label, SUIT suit) {
         super(label, suit, "Volcanic", 1);

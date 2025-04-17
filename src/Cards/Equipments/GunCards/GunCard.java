@@ -1,11 +1,9 @@
-package Cards.GunCards;
+package Cards.Equipments.GunCards;
 
-import Cards.Card;
 import Cards.Equipments.Equipment;
 import Cards.Equipments.EquipmentType;
 import Cards.LABEL;
 import Cards.SUIT;
-import Players.Player;
 
 public class GunCard extends Equipment {
     private final int range;

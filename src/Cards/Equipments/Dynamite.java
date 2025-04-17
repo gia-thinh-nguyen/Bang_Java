@@ -1,6 +1,5 @@
 package Cards.Equipments;
 
-import Cards.Card;
 import Cards.LABEL;
 import Cards.SUIT;
 import Game.ActionMenu;
@@ -14,7 +13,6 @@ public class Dynamite extends Equipment {
     @Override
     public void played() {
         super.played();
-        Player target = ActionMenu.showTargetablePlayer(getOwner().getPlayers(),getOwner().getGunRange());
-        target.setDynamited(true);
+        getOwner().setDynamited(true);
     }
 }
