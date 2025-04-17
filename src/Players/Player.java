@@ -31,7 +31,7 @@ public class Player {
         boolean isSheriff = role== Role.SHERIFF;
         this.isSheriff = isSheriff;
         this.name = name;
-        this.health = isSheriff ? 5 : 1;
+        this.health = isSheriff ? 5 : 4;
         this.maxHealth = isSheriff ? 5 : 4;
         this.gunRange = 1;
         this.horse = 0;
@@ -84,11 +84,8 @@ public class Player {
         for(int i=0; i<numCards; i++){
             Card card = gameBoard.DrawFromPile();
             card.setOwner(this);
-            hand.add(card);
+            addToHand(card);
         }
-    }
-    public void setHealth(int health){
-        this.health = health;
     }
     public void heal(){
         if(health < maxHealth){
@@ -143,6 +140,9 @@ public class Player {
         }
         return false;
     }
+    public void addToHand(Card card){
+        hand.add(card);
+    }
     public void removeFromHand(Card card){
         for (Card c : hand){
             if(c.equals(card)){
@@ -179,15 +179,31 @@ public class Player {
         if(health <= 0){
             isAlive = false;
         }
-        System.out.println("Player "+name+" is damaged by"+damageSource+" and is"+isAlive);
     }
-    public void playCardToBang(String cardName){
-        //play first missed card
+    public void playFistCardFromHand(String cardName){
         for(Card card : hand){
             if(card.getName().equals(cardName)){
                 card.played();
                 break;
             }
         }
+    }
+    public void discardFirstCardFromHand(String cardName){
+        for(Card card : hand){
+            if(card.getName().equals(cardName)){
+                gameBoard.Discard(card);
+                hand.remove(card);
+                break;
+            }
+        }
+    }
+    public Card removeRandomCardFromHand(){
+        if(hand.isEmpty()){
+            return null;
+        }
+        int randomIndex = (int) (Math.random() * hand.size());
+        Card card = hand.get(randomIndex);
+        hand.remove(randomIndex);
+        return card;
     }
 }

@@ -36,9 +36,14 @@ public class ActionMenu {
         for (int i = 1; i< players.size();i++){
             boolean isTargetable = (i<=range || players.size()-i<=range) ||
                     (players.get(i).getHorse()==1 && (i<=range-1 || players.size()-i<=range-1));
-            if((targetType==TargetType.CATBALOU) || (targetType==TargetType.DUEL) ||
+            //can CatBalou if the target has cards or equipments
+            boolean hasEquipment = players.get(i).getEquipmentMap().values().stream().anyMatch(Objects::nonNull);
+            boolean hasCards = !players.get(i).getHand().isEmpty();
+            boolean canCatBalou = hasCards || hasEquipment;
+            if((targetType==TargetType.CATBALOU && canCatBalou) || (targetType==TargetType.DUEL) ||
                 (targetType==TargetType.JAIL && !players.get(i).isSheriff()) ||
-                ((targetType==TargetType.BANG||targetType==TargetType.PANIC)&& isTargetable)){
+                (targetType==TargetType.BANG&& isTargetable) ||
+                (targetType==TargetType.PANIC && isTargetable && hasCards)){
                 targetablePlayers.add(players.get(i));
             }
         }
@@ -98,18 +103,18 @@ public class ActionMenu {
                 break;
             case "m":
                 //use missed
-                target.playCardToBang("Missed");
+                target.playFistCardFromHand("Missed");
                 System.out.println("Player uses missed.");
                 break;
             case "b":
                 //take damage and use beer
                 target.takeDamage(currentPlayer,1);
-                target.playCardToBang("Beer");
+                target.playFistCardFromHand("Beer");
                 System.out.println("Player uses beer.");
                 break;
             case "s":
                 //use saloon
-                target.playCardToBang("Saloon");
+                target.playFistCardFromHand("Saloon");
                 System.out.println("Player uses saloon.");
                 break;
             default:
@@ -141,19 +146,54 @@ public class ActionMenu {
         } while (!keyToEquipmentMap.containsKey(key));
         switch (key){
             case 1:
-                //remove random card from hand
-                Random rand = new Random();
-                int randomIndex = rand.nextInt(target.getHand().size());
-                Card card = target.getHand().get(randomIndex);
-                target.removeFromHand(card);
-                target.getGameBoard().Discard(card);
-                System.out.println("Player " + target.getName() + " discards " + card.toString());
+                Card removedCard = target.removeRandomCardFromHand();
+                target.getGameBoard().Discard(removedCard);
+                System.out.println("Player " + target.getName() + " discards " + removedCard.toString());
                 break;
             default:
                 //remove equipment
                 EquipmentType equipmentType = keyToEquipmentMap.get(key);
                 target.removeEquipment(equipmentType);
                 System.out.println("Player " + target.getName() + " remove their " + equipmentType);
+        }
+    }
+    public static void showDuelMenu(Player dueler, Player target) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Player " + dueler.getName() + " is dueling Player " + target.getName());
+
+        // Start the duel loop
+        Player currentPlayer = target;
+        Player opponent = dueler;
+
+        while (true) {
+            System.out.println("Current duel action: Player " + currentPlayer.getName());
+            int options = 1;
+            System.out.println("1. Fail to respond");
+            if (currentPlayer.hasCard("Bang")) {
+                options++;
+                System.out.println("2. Use Bang");
+            }
+
+            int key;
+            do {
+                key = scanner.nextInt();
+            } while (key < 1 || key > options);
+
+            if (key == 1) {
+                // Fail to respond
+                currentPlayer.takeDamage(opponent, 1);
+                System.out.println("Player " + currentPlayer.getName() + " fails to respond and takes 1 damage.");
+                break; // End the duel
+            } else if (key == 2) {
+                // Use Bang
+                currentPlayer.discardFirstCardFromHand("Bang");
+                System.out.println("Player " + currentPlayer.getName() + " uses Bang.");
+            }
+
+            // Swap players for the next turn
+            Player temp = currentPlayer;
+            currentPlayer = opponent;
+            opponent = temp;
         }
     }
 }

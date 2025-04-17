@@ -13,6 +13,11 @@ import java.util.Arrays;
 
 public class CardDatabase {
     public static final ArrayList<Card> cards = new ArrayList<>(Arrays.asList(
+            new Duel(LABEL.ACE, SUIT.SPADE),
+            new Bang(LABEL.TWO, SUIT.HEART),
+            new Bang(LABEL.THREE, SUIT.SPADE),
+            new Bang(LABEL.FOUR, SUIT.DIAMOND),
+            new Duel(LABEL.ACE, SUIT.SPADE),
             new Bang(LABEL.TWO, SUIT.HEART),
             new Bang(LABEL.THREE, SUIT.SPADE),
             new Bang(LABEL.FOUR, SUIT.DIAMOND),
@@ -28,7 +33,7 @@ public class CardDatabase {
             new Beer(LABEL.SIX, SUIT.HEART),
             new CatBalou(LABEL.FIVE, SUIT.HEART),
             new Saloon(LABEL.KING, SUIT.SPADE),
-
+            new Panic(LABEL.TWO, SUIT.HEART),
             new Jail(LABEL.TWO, SUIT.DIAMOND),
             new Stagecoach(LABEL.ACE, SUIT.SPADE),
 
