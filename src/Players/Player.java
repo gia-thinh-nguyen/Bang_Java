@@ -5,8 +5,10 @@ import Game.GameBoard;
 import Game.Game;
 
 import java.util.ArrayList;
+import java.util.Queue;
 
 public class Player {
+    private String name;
     private int health;
     private int maxHealth;
     private int gunRange;
@@ -20,10 +22,13 @@ public class Player {
     private boolean bangUnlimited;
     private boolean isAlive;
     private ArrayList<Card> hand;
+    private ArrayList<Card> equipments;
     private final GameBoard gameBoard;
     private final Game game;
-    public Player(boolean isSheriff,Game game, GameBoard gameBoard, Role role, Character character){
+    public Player(String name,Game game, GameBoard gameBoard, Role role, Character character){
+        boolean isSheriff = role== Role.SHERIFF;
         this.isSheriff = isSheriff;
+        this.name = name;
         this.health = isSheriff ? 5 : 4;
         this.maxHealth = isSheriff ? 5 : 4;
         this.gunRange = 1;
@@ -38,6 +43,19 @@ public class Player {
         this.gameBoard = gameBoard;
         this.isAlive = true;
         this.bangUnlimited = false;
+    }
+    @Override
+    public String toString(){
+        String sb = "Player: " + getName() + " " +
+                "Health: " + health + "/" + maxHealth + " " +
+                "Gun Range: " + gunRange + " " +
+                "Horse: " + horse + " " +
+                "Barrel: " + hasBarrel + " " +
+                "Dynamited: " + isDynamited + " " +
+                "Jailed: " + isJailed + " " +
+                "Role: " + role.toString() + " " +
+                "Character: " + character.toString() + " ";
+        return sb;
     }
     public void draw(int numCards){
         for(int i=0; i<numCards; i++){
@@ -72,7 +90,19 @@ public class Player {
         this.bangUnlimited = bangUnlimited;
     }
 
-    public ArrayList<Player> getPlayers(){
+    public Queue<Player> getPlayers(){
         return game.getPlayers();
+    }
+    public String getName(){
+        return name;
+    }
+    public boolean isSheriff(){
+        return isSheriff;
+    }
+    public void removeFromHand(Card card){
+        hand.remove(card);
+    }
+    public void addToEquipments(Card card){
+        equipments.add(card);
     }
 }

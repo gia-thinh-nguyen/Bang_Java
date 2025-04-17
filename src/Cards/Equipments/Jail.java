@@ -13,5 +13,6 @@ public class Jail extends Card {
     @Override
     public void played(Player target) {
         target.setJailed(true);
+        target.addToEquipments(this);
     }
 }

@@ -11,10 +11,31 @@ public abstract class Card {
         this.label = label;
         this.name = name;
     }
+    @Override
+    public String toString(){
+        String suitString = "";
+        switch (suit){
+            case SPADE -> suitString = "♠";
+            case HEART -> suitString = "♥";
+            case DIAMOND -> suitString = "♦";
+            case CLUB -> suitString = "♣";
+        }
+        String labelString = "";
+        switch (label){
+            case ACE -> labelString = "A";
+            case JACK -> labelString = "J";
+            case QUEEN -> labelString = "Q";
+            case KING -> labelString = "K";
+            default -> labelString = String.valueOf(label.getValue());
+        }
+        return name + " " + labelString + suitString;
+    }
     public void played(){
         played(null);
     }
     public void played(Player target){
+        owner.removeFromHand(this);
+
     }
     public void setOwner(Player owner){
         this.owner = owner;

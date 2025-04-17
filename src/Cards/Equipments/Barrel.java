@@ -12,5 +12,6 @@ public class Barrel extends Card {
     @Override
     public void played() {
         getOwner().setBarrel(true);
+        getOwner().addToEquipments(this);
     }
 }

@@ -13,5 +13,6 @@ public class Dynamite extends Card {
     @Override
     public void played(Player target) {
         target.setDynamited(true);
+        target.addToEquipments(this);
     }
 }
