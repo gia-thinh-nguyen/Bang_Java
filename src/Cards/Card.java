@@ -40,4 +40,13 @@ public abstract class Card {
     public Player getOwner(){
         return owner;
     }
+    public String getName(){
+        return name;
+    }
+    public SUIT getSuit(){
+        return suit;
+    }
+    public LABEL getLabel(){
+        return label;
+    }
 }

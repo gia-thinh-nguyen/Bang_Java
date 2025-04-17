@@ -31,7 +31,7 @@ public class Player {
         boolean isSheriff = role== Role.SHERIFF;
         this.isSheriff = isSheriff;
         this.name = name;
-        this.health = isSheriff ? 5 : 4;
+        this.health = isSheriff ? 5 : 1;
         this.maxHealth = isSheriff ? 5 : 4;
         this.gunRange = 1;
         this.horse = 0;
@@ -132,7 +132,17 @@ public class Player {
     public boolean isSheriff(){
         return isSheriff;
     }
-
+    public boolean hasBarrel(){
+        return hasBarrel;
+    }
+    public boolean hasCard(String cardName){
+        for(Card card : hand){
+            if(card.getName().equals(cardName)){
+                return true;
+            }
+        }
+        return false;
+    }
     public void removeFromHand(Card card){
         for (Card c : hand){
             if(c.equals(card)){
@@ -149,5 +159,26 @@ public class Player {
     }
     public GameBoard getGameBoard(){
         return gameBoard;
+    }
+
+    public Card checkTopCard(){
+        return gameBoard.checkTopCard();
+    }
+    public void takeDamage(Player damageSource,int damage){
+        //damageSource is null for dynamite
+        health -= damage;
+        if(health <= 0){
+            isAlive = false;
+        }
+        System.out.println("Player "+name+" is damaged by"+damageSource+" and is"+isAlive);
+    }
+    public void playCardToBang(String cardName){
+        //play first missed card
+        for(Card card : hand){
+            if(card.getName().equals(cardName)){
+                card.played();
+                break;
+            }
+        }
     }
 }

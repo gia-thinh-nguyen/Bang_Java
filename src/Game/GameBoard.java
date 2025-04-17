@@ -47,4 +47,10 @@ public class GameBoard {
     public Stack<Card> getDiscardPile() {
         return discardPile;
     }
+    public Card checkTopCard(){
+        //return the top card of the draw pile and discard it
+        Card card =DrawFromPile();
+        Discard(card);
+        return card;
+    }
 }

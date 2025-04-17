@@ -21,7 +21,7 @@ public class Equipment extends Cards.Card {
         if(oldEquipment != null){
             getOwner().getGameBoard().Discard(oldEquipment);
         }
-        getOwner().addToEquipmentMap(equipmentType,this);
+        getOwner().addToEquipmentMap(equipmentType,this); //not for jail
     }
 
 }
