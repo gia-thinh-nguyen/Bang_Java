@@ -117,6 +117,9 @@ public abstract class Player {
     public Character getCharacter(){
         return character;
     }
+    public Role getRole(){
+        return role;
+    }
     public ArrayList<Card> getHand(){
         return hand;
     }
@@ -277,7 +280,10 @@ public abstract class Player {
         }
     }
     public void onElimination(){
+        System.out.println("Player " + name + " is eliminated. Role: " + role.toString());
         isAlive = false;
+        game.removePlayer(this);
+        //discard all cards or pass to Vulture Sam
         if(game.hasVultureSam()){
             Player vultureSam = game.getVultureSam();
             for(Card card: hand){
@@ -300,7 +306,21 @@ public abstract class Player {
                 removeEquipment(equipmentType);
             }
         }
-
+        //the Sheriff is killed. If the Renegade is the only one alive, then he wins. Otherwise, the Outlaws win.
+        if(isSheriff()){
+            if(game.isRenegadeOnlyOneAlive()){
+                System.out.println("Renegade wins.");
+            }
+            else{
+                System.out.println("Sheriff is dead. Outlaws win.");
+            }
+            System.exit(0);
+        }
+        //all the Outlaws and the Renegade are killed. The Sheriff and his Deputies win.
+        else if(game.isAllOutlawsAndRenegedeDead()){
+            System.out.println("All Outlaws and Renegade are dead. Sheriff and his Deputies win.");
+            System.exit(0);
+        }
     }
 
     //return false if player is failed to escape from jail
@@ -360,5 +380,18 @@ public abstract class Player {
     protected void firstPhaseDraw(){
         //normal characters draw 2 cards
         draw(2);
+    }
+    public void discardPhase(){
+        //discard phase
+        //if hand size is greater than max health, discard a card
+        while(hand.size() > maxHealth){
+            System.out.println("You have to discard a card.");
+            Card card = ActionMenu.showMenu(hand,false);
+            if(card == null){
+                break;
+            }
+            removeFromHand(card);
+            gameBoard.Discard(card);
+        }
     }
 }

@@ -44,13 +44,14 @@ public class Game {
                 chosenCard.played();
             }
             else{
+                currentPlayer.discardPhase();
                 nextTurn();
             }
 
         }
     }
     public void CreateAndAddPlayers(GameBoard gameBoard, Game game){
-        players.add(new BlackJack("1",game,gameBoard, Role.OUTLAW));
+        players.add(new SuzyLafayette("1",game,gameBoard, Role.OUTLAW));
         players.add(new BlackJack("2",game,gameBoard, Role.SHERIFF));
         players.add(new ElGringo("3",game,gameBoard, Role.OUTLAW));
         players.add(new BlackJack("4",game,gameBoard, Role.VICE));
@@ -70,6 +71,9 @@ public class Game {
     public Queue<Player> getPlayers() {
         return players;
     }
+    public void removePlayer(Player player){
+        players.remove(player);
+    }
     public boolean hasVultureSam(){
         for(Player player: players){
             if(player.getCharacter() == Character.VULTURE_SAM){
@@ -86,8 +90,15 @@ public class Game {
         }
         return null;
     }
-    //to do:
-    //check if the game is over
-    //add discard phase
-
+    public boolean isRenegadeOnlyOneAlive(){
+        return players.peek().getRole() == Role.RENEGADE && players.size() == 1;
+    }
+    public boolean isAllOutlawsAndRenegedeDead(){
+        for(Player player: players){
+            if(player.getRole() == Role.OUTLAW || player.getRole() == Role.RENEGADE){
+                return false;
+            }
+        }
+        return true;
+    }
 }
