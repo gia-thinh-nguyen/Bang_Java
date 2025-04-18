@@ -10,7 +10,7 @@ public class Mustang extends Equipment{
     @Override
     public void played() {
         super.played();
-        getOwner().setHorse(1);
+        getOwner().setDefenseHorse(1);
     }
 
 }

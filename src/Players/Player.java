@@ -9,12 +9,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Queue;
 
-public class Player {
+public abstract class Player {
     private String name;
     private int health;
     private int maxHealth;
     private int gunRange;
-    private int horse;
+    private int attackHorse;
+    private int defenseHorse;
     private boolean hasBarrel;
     private boolean isDynamited;
     private boolean isJailed;
@@ -35,7 +36,8 @@ public class Player {
         this.health = isSheriff ? 5 : 4;
         this.maxHealth = isSheriff ? 5 : 4;
         this.gunRange = 1;
-        this.horse = 0;
+        this.attackHorse = 0;
+        this.defenseHorse = 0;
         this.hasBarrel = false;
         this.isDynamited = false;
         this.isJailed = false;
@@ -66,10 +68,17 @@ public class Player {
         for(Card card : hand){
             handString += card.toString() + ", ";
         }
+        String horseString = "";
+        if(attackHorse > 0){
+            horseString += "Attack Horse: " + attackHorse + ", ";
+        }
+        if(defenseHorse > 0){
+            horseString += "Defense Horse: " + defenseHorse + ", ";
+        }
         String sb = "Player:" + getName() + " " +
                 "Health:" + health + "/" + maxHealth + " " +
                 "Gun Range:" + gunRange + " " +
-                "Horse:" + horse + " " +
+                horseString+ " " +
                 "Barrel:" + hasBarrel + " " +
                 "Dynamited:" + isDynamited + " " +
                 "Jailed:" + isJailed + " " +
@@ -93,11 +102,20 @@ public class Player {
             health++;
         }
     }
+    public void setHealth(int health){
+        this.health = health;
+    }
+    public void setMaxHealth(int maxHealth){
+        this.maxHealth = maxHealth;
+    }
     public void setGunRange(int gunRange){
         this.gunRange = gunRange;
     }
-    public void setHorse(int horse){
-        this.horse = horse;
+    public void setAttackHorse(int horse){
+        this.attackHorse = horse;
+    }
+    public void setDefenseHorse(int horse){
+        this.defenseHorse = horse;
     }
     public void setBarrel(boolean hasBarrel){
         this.hasBarrel = hasBarrel;
@@ -130,8 +148,11 @@ public class Player {
     public int getGunRange(){
         return gunRange;
     }
-    public int getHorse(){
-        return horse;
+    public int getAttackHorse(){
+        return attackHorse;
+    }
+    public int getDefenseHorse(){
+        return defenseHorse;
     }
     public boolean BangUnlimited(){
         return bangUnlimited;
@@ -176,7 +197,10 @@ public class Player {
                 gunRange = 1;
                 setBangUnlimited(false);
             }
-            case HORSE -> horse = 0;
+            case HORSE -> {
+                attackHorse = 0;
+                defenseHorse = 0;
+            }
             case BARREL -> hasBarrel = false;
             case DYNAMITE -> isDynamited = false;
             case JAIL -> isJailed = false;

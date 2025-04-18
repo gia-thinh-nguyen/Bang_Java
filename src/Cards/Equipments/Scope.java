@@ -10,6 +10,6 @@ public class Scope extends Equipment{
     @Override
     public void played() {
         super.played();
-        getOwner().setHorse(-1);
+        getOwner().setAttackHorse(-1);
     }
 }

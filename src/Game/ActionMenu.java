@@ -1,7 +1,6 @@
 package Game;
 
 import Cards.Card;
-import Cards.Equipments.Equipment;
 import Cards.Equipments.EquipmentType;
 import Cards.SUIT;
 import Cards.TargetType;
@@ -36,10 +35,10 @@ public class ActionMenu {
         Map<Integer, Player> keyToPlayerMap = new HashMap<>();
         List<Player> players = new ArrayList<>(currentPlayer.getPlayers());
         ArrayList<Player> targetablePlayers = new ArrayList<>();
-        int range = (targetType==TargetType.PANIC ? 1: currentPlayer.getGunRange()) + (currentPlayer.getHorse() == -1 ? 1:0);
+        int range = (targetType==TargetType.PANIC ? 1: currentPlayer.getGunRange()) + currentPlayer.getAttackHorse();
         for (int i = 1; i< players.size();i++){
-            boolean isTargetable = (i<=range || players.size()-i<=range) ||
-                    (players.get(i).getHorse()==1 && (i<=range-1 || players.size()-i<=range-1));
+            int targetDefHorse = players.get(i).getDefenseHorse();
+            boolean isTargetable = (i<=range- targetDefHorse || players.size()-i<=range-targetDefHorse);
             //can CatBalou if the target has cards or equipments
             boolean hasEquipment = players.get(i).getEquipmentMap().values().stream().anyMatch(Objects::nonNull);
             boolean hasCards = !players.get(i).getHand().isEmpty();
@@ -70,20 +69,20 @@ public class ActionMenu {
             System.out.println("Jourdonnais is checking barrel");
             if(checkBarrel(currentPlayer)){
                 return;
-            };
+            }
         }
         if(target.hasBarrel()){
             System.out.println("Checking barrel...");
             if(checkBarrel(currentPlayer)){
                 return;
-            };
+            }
         }
 
         System.out.println("Respond: ");
         ArrayList<String> options = new ArrayList<>();
         options.add("1");
         System.out.println("1. Skip");
-        //if has missed cards, add option to use them
+        //if target has missed cards, add option to use them
         if(target.hasCard("Missed")){
             options.add("m");
             System.out.println("m. Missed");
@@ -150,17 +149,15 @@ public class ActionMenu {
         do {
             key = scanner.nextInt();
         } while (!keyToEquipmentMap.containsKey(key));
-        switch (key){
-            case 1:
-                Card removedCard = target.removeRandomCardFromHand();
-                target.getGameBoard().Discard(removedCard);
-                System.out.println("Player " + target.getName() + " discards " + removedCard.toString());
-                break;
-            default:
-                //remove equipment
-                EquipmentType equipmentType = keyToEquipmentMap.get(key);
-                target.removeEquipment(equipmentType);
-                System.out.println("Player " + target.getName() + " remove their " + equipmentType);
+
+        if (key == 1) {
+            Card removedCard = target.removeRandomCardFromHand();
+            target.getGameBoard().Discard(removedCard);
+            System.out.println("Player " + target.getName() + " discards " + removedCard.toString());
+        } else {//remove equipment
+            EquipmentType equipmentType = keyToEquipmentMap.get(key);
+            target.removeEquipment(equipmentType);
+            System.out.println("Player " + target.getName() + " remove their " + equipmentType);
         }
     }
     public static void showDuelMenu(Player dueler, Player target) {
