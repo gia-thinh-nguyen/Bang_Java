@@ -16,7 +16,6 @@ public class Jail extends Card {
     public void played() {
         getOwner().removeFromHand(this);
         Player target = ActionMenu.showTargetablePlayer(getOwner(), TargetType.JAIL);
-        target.setJailed(true);
         target.addToEquipmentMap(EquipmentType.JAIL, this);
     }
 }

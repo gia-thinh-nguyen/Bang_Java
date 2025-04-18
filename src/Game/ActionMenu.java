@@ -11,7 +11,7 @@ import java.util.*;
 
 public class ActionMenu {
 
-    public static Card showMenu(List<Card> hand,boolean isEmporio) {
+    public static Card showMenu(List<Card> hand,boolean skipOption) {
         Scanner scanner = new Scanner(System.in);
         Map<Integer, Card> keyToCardMap = new HashMap<>();
         int i;
@@ -19,7 +19,7 @@ public class ActionMenu {
             keyToCardMap.put(i, hand.get(i-1));
             System.out.println(i + ". " + hand.get(i-1).toString());
         }
-        if(!isEmporio){
+        if(skipOption){
             keyToCardMap.put(i, null);
             System.out.println(i + ". Skip");
         }
@@ -87,44 +87,20 @@ public class ActionMenu {
             options.add("m");
             System.out.println("m. Missed");
         }
-        //if almost dead, add option to use heal (beer and saloon)
-        if(target.hasCard("Beer")){
-            options.add("b");
-            System.out.println( "b. Beer");
-        }
-        if(target.hasCard("Saloon")){
-            options.add("s");
-            System.out.println("s. Saloon");
-        }
+
         String key;
         do {
             key = scanner.next();
         } while (!options.contains(key));
-        switch (key){
-            case "1":
-                //take damage
-                target.takeDamage(currentPlayer,1);
-                System.out.println("Player does not respond to bang and takes 1 damage.");
-                break;
-            case "m":
-                //use missed
-                target.playFistCardFromHand("Missed");
-                System.out.println("Player uses missed.");
-                break;
-            case "b":
-                //take damage and use beer
-                target.takeDamage(currentPlayer,1);
-                target.playFistCardFromHand("Beer");
-                System.out.println("Player uses beer.");
-                break;
-            case "s":
-                //use saloon
-                target.playFistCardFromHand("Saloon");
-                System.out.println("Player uses saloon.");
-                break;
-            default:
-                System.out.println("Invalid option.");
-                break;
+
+        if (key.equals("1")) {
+            // Take damage
+            target.takeDamage(currentPlayer);
+            System.out.println("Player " + target.getName() + " does not respond to bang and takes 1 damage.");
+        } else if (key.equals("m")) {
+            // Use Missed
+            target.discardFirstCardFromHand("Missed");
+            System.out.println("Player " + target.getName() + " uses Missed.");
         }
     }
     public static void showCatBalouMenu(Player target) {
@@ -184,7 +160,7 @@ public class ActionMenu {
 
             if (key == 1) {
                 // Fail to respond
-                currentPlayer.takeDamage(opponent, 1);
+                currentPlayer.takeDamage(opponent);
                 System.out.println("Player " + currentPlayer.getName() + " fails to respond and takes 1 damage.");
                 break; // End the duel
             } else if (key == 2) {
@@ -224,7 +200,7 @@ public class ActionMenu {
             } while (key < 1 || key > options);
             if (key == 1) {
                 // Fail to respond
-                players.get(i).takeDamage(currentPlayer, 1);
+                players.get(i).takeDamage(currentPlayer);
                 System.out.println("Player " + players.get(i).getName() + " fails to respond and takes 1 damage.");
             } else if (key == 2) {
                 // Use Bang
@@ -244,13 +220,13 @@ public class ActionMenu {
         }
         for (Player player : players) {
             System.out.println("Player " + player.getName() + " choose a card to keep: ");
-            Card chosenCard = showMenu(emporioCards,true);
+            Card chosenCard = showMenu(emporioCards,false);
             player.addToHand(chosenCard);
             emporioCards.remove(chosenCard);
         }
     }
     public static boolean checkBarrel(Player currentPlayer){
-        boolean success = currentPlayer.getGameBoard().checkTopCard(null, SUIT.HEART);
+        boolean success = currentPlayer.getGameBoard().checkTopCardSuit(SUIT.HEART);
         if(success){
             System.out.println("Barrel activated! You are safe.");
              return true;

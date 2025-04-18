@@ -13,6 +13,5 @@ public class Dynamite extends Equipment {
     @Override
     public void played() {
         super.played();
-        getOwner().setDynamited(true);
     }
 }

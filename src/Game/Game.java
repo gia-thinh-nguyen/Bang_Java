@@ -9,6 +9,7 @@ import Players.Heros.WillyTheKid;
 import Players.Player;
 import Players.Role;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -35,10 +36,12 @@ public class Game {
             System.out.println("----------------------");
             if(players.peek()!=currentPlayer){
                 currentPlayer = players.peek();
-                currentPlayer.firstPhase();
+                if(!currentPlayer.firstPhase()){
+                    nextTurn();
+                }
             }
             System.out.println("Current Player: " + players.peek());
-            Card chosenCard=ActionMenu.showMenu(players.peek().getHand(),false);
+            Card chosenCard=ActionMenu.showMenu(players.peek().getHand(),true);
             //if chosenCard is null, skip
             if(chosenCard!=null){
                 chosenCard.played();
@@ -63,6 +66,9 @@ public class Game {
     public void nextTurn(){
         Player player = this.players.remove();
         this.players.add(player);
+    }
+    public Player getNextPlayer() {
+        return new ArrayList<>(players).get(1);
     }
     public Queue<Player> getPlayers() {
         return players;

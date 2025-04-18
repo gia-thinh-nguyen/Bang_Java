@@ -2,45 +2,38 @@ package Players;
 
 import Cards.Card;
 import Cards.Equipments.EquipmentType;
+import Cards.SUIT;
 import Game.GameBoard;
 import Game.Game;
+import Game.ActionMenu;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Queue;
 
 public abstract class Player {
-    private String name;
+    private final String name;
     private int health;
     private int maxHealth;
     private int gunRange;
     private int attackHorse;
     private int defenseHorse;
-    private boolean hasBarrel;
-    private boolean isDynamited;
-    private boolean isJailed;
-    private Role role;
-    private Character character;
-    private boolean isSheriff;
+    private final Role role;
+    private final Character character;
     private boolean bangUnlimited;
     private boolean alreadyBanged;
     private boolean isAlive;
-    private ArrayList<Card> hand;
-    private HashMap<EquipmentType,Card> equipmentTypeToCardMap = new HashMap<>();
+    private final ArrayList<Card> hand;
+    private final HashMap<EquipmentType,Card> equipmentTypeToCardMap = new HashMap<>();
     private final GameBoard gameBoard;
     private final Game game;
     public Player(String name,Game game, GameBoard gameBoard, Role role, Character character){
-        boolean isSheriff = role== Role.SHERIFF;
-        this.isSheriff = isSheriff;
         this.name = name;
-        this.health = isSheriff ? 5 : 4;
-        this.maxHealth = isSheriff ? 5 : 4;
+        this.health = role== Role.SHERIFF ? 5 : 4;
+        this.maxHealth = role== Role.SHERIFF ? 5 : 4;
         this.gunRange = 1;
         this.attackHorse = 0;
         this.defenseHorse = 0;
-        this.hasBarrel = false;
-        this.isDynamited = false;
-        this.isJailed = false;
         this.role = role;
         this.character = character;
         this.hand = new ArrayList<>();
@@ -79,9 +72,9 @@ public abstract class Player {
                 "Health:" + health + "/" + maxHealth + " " +
                 "Gun Range:" + gunRange + " " +
                 horseString+ " " +
-                "Barrel:" + hasBarrel + " " +
-                "Dynamited:" + isDynamited + " " +
-                "Jailed:" + isJailed + " " +
+                "Barrel:" + hasBarrel() + " " +
+                "Dynamited:" + isDynamited() + " " +
+                "Jailed:" + isJailed() + " " +
                 "Role:" + role.toString() + " " +
                 "Character:" + character.toString() + "\n" +
                 "     Hand: " + handString+ "\n" +
@@ -117,21 +110,14 @@ public abstract class Player {
     public void setDefenseHorse(int horse){
         this.defenseHorse = horse;
     }
-    public void setBarrel(boolean hasBarrel){
-        this.hasBarrel = hasBarrel;
-    }
-    public void setDynamited(boolean isDynamited){
-        this.isDynamited = isDynamited;
-    }
-    public void setJailed(boolean isJailed){
-        this.isJailed = isJailed;
-    }
+
     public void setBangUnlimited(boolean bangUnlimited){
         this.bangUnlimited = bangUnlimited;
     }
     public void setAlreadyBanged(boolean alreadyBanged){
         this.alreadyBanged = alreadyBanged;
     }
+
 
     public Queue<Player> getPlayers(){
         return game.getPlayers();
@@ -154,6 +140,9 @@ public abstract class Player {
     public int getDefenseHorse(){
         return defenseHorse;
     }
+    public boolean getIsAlive(){
+        return isAlive;
+    }
     public boolean BangUnlimited(){
         return bangUnlimited;
     }
@@ -161,10 +150,16 @@ public abstract class Player {
         return alreadyBanged;
     }
     public boolean isSheriff(){
-        return isSheriff;
+        return role== Role.SHERIFF;
     }
     public boolean hasBarrel(){
-        return hasBarrel;
+        return equipmentTypeToCardMap.get(EquipmentType.BARREL) != null;
+    }
+    public boolean isDynamited(){
+        return equipmentTypeToCardMap.get(EquipmentType.DYNAMITE) != null;
+    }
+    public boolean isJailed(){
+        return equipmentTypeToCardMap.get(EquipmentType.JAIL) != null;
     }
     public boolean hasCard(String cardName){
         for(Card card : hand){
@@ -173,6 +168,26 @@ public abstract class Player {
             }
         }
         return false;
+    }
+    public boolean almostDead(){
+        return health <= 1;
+    }
+    public boolean hasHealCards(){
+        for(Card card : hand){
+            if(card.getName().equals("Beer") || card.getName().equals("Saloon")){
+                return true;
+            }
+        }
+        return false;
+    }
+    public ArrayList<Card> getHealCards(){
+        ArrayList<Card> healCards = new ArrayList<>();
+        for(Card card : hand){
+            if(card.getName().equals("Beer") || card.getName().equals("Saloon")){
+                healCards.add(card);
+            }
+        }
+        return healCards;
     }
     public void addToHand(Card card){
         hand.add(card);
@@ -189,7 +204,11 @@ public abstract class Player {
         equipmentTypeToCardMap.put(equipmentType,card);
     }
     public void removeEquipment(EquipmentType equipmentType){
+        //remove from equipment map and discard
         Card card = equipmentTypeToCardMap.get(equipmentType);
+        if(card==null){
+            return;
+        }
         equipmentTypeToCardMap.put(equipmentType,null);
         //set to default values
         switch (equipmentType){
@@ -201,9 +220,6 @@ public abstract class Player {
                 attackHorse = 0;
                 defenseHorse = 0;
             }
-            case BARREL -> hasBarrel = false;
-            case DYNAMITE -> isDynamited = false;
-            case JAIL -> isJailed = false;
         }
         gameBoard.Discard(card);
     }
@@ -214,12 +230,23 @@ public abstract class Player {
         return gameBoard;
     }
 
-    public void takeDamage(Player damageSource,int damage){
-        //damageSource is null for dynamite
-        health -= damage;
-        if(health <= 0){
-            isAlive = false;
+    public void takeDamage(Player damageSource){
+        String damageSourceName = damageSource == null ? "dynamite" : damageSource.getName();
+        System.out.println("You lose 1 health from " + damageSourceName + ".");
+        if(almostDead()){
+            if(hasHealCards()){
+                System.out.println("Almost dead but you have heals.");
+                Card card = ActionMenu.showMenu(getHealCards(),false);
+                card.played();
+            }
+            else{
+                System.out.println("You are dead.");
+                isAlive = false;
+                reward(damageSource,role);
+            }
         }
+        health -= 1;
+
     }
     public void playFistCardFromHand(String cardName){
         for(Card card : hand){
@@ -248,9 +275,69 @@ public abstract class Player {
         return card;
     }
 
-    public void firstPhase(){
+    public void reward(Player killer,Role role){
+        //reward based on role
+        //if Outlaw, killer draw 3 cards
+        //if Vice and killer is Sheriff, lose all cards and equipment
+        if(killer == null) return;
+        if(role == Role.OUTLAW){
+            killer.draw(3);
+        }
+        else if(role == Role.VICE && killer.isSheriff()){
+            //lose all cards and equipment
+            for(Card card : hand){
+                gameBoard.Discard(card);
+            }
+            hand.clear();
+            for(EquipmentType equipmentType : equipmentTypeToCardMap.keySet()){
+                removeEquipment(equipmentType);
+            }
+        }
+    }
+
+    //return false if player is failed to escape from jail
+    public boolean firstPhase(){
+        //reset variables
         alreadyBanged = false;
+        //check for dynamite and jail
+        if(isDynamited()){
+            //check for dynamite
+            //if top card is 2 to 9 Spades, lose 3 health. Else pass the dynamite to the next player
+            Card topCard = gameBoard.checkTopCard();
+            SUIT suit = topCard.getSuit();
+            int label = topCard.getLabel().getValue();
+            if(suit == SUIT.SPADE && label >= 2 && label <= 9){
+                for(int i=0; i<3; i++){
+                    takeDamage(null);
+                }
+                removeEquipment(EquipmentType.DYNAMITE);
+                System.out.println("Top card is " + topCard + ". You lose 3 health.");
+            }
+            else{
+                System.out.println("Top card is " + topCard + ". Pass the dynamite to the next player.");
+                //pass the dynamite to the next player
+                Card dynamite = equipmentTypeToCardMap.get(EquipmentType.DYNAMITE);
+                equipmentTypeToCardMap.put(EquipmentType.DYNAMITE,null);
+                game.getNextPlayer().addToEquipmentMap(EquipmentType.DYNAMITE,dynamite);
+            }
+        }
+        if(isJailed()){
+            //if jailed, check top card for a Heart. If failed, lose a turn and discard the jail
+            removeEquipment(EquipmentType.JAIL);
+            boolean success = gameBoard.checkTopCardSuit(SUIT.HEART);
+            if(!success){
+                System.out.println("You are jailed. You lose a turn.");
+                return false;
+            }
+            else{
+                System.out.println("You are free from jail.");
+                removeEquipment(EquipmentType.JAIL);
+                return true;
+            }
+        }
+
         //draw 2 cards
         draw(2);
+        return true;
     }
 }

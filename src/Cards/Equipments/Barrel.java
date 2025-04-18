@@ -10,6 +10,5 @@ public class Barrel extends Equipment {
     @Override
     public void played() {
         super.played();
-        getOwner().setBarrel(true);
     }
 }

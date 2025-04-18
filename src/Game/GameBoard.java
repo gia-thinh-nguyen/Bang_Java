@@ -50,15 +50,16 @@ public class GameBoard {
     public Stack<Card> getDiscardPile() {
         return discardPile;
     }
-    public boolean checkTopCard(LABEL label, SUIT suit) {
+    public boolean checkTopCardSuit(SUIT suit) {
         // Return the top card of the draw pile and discard it
         Card card = DrawFromPile();
         Discard(card);
-
-        // Check based on non-null parameters
-        boolean labelMatches = (label == null) || (card.getLabel() == label);
-        boolean suitMatches = (suit == null) || (card.getSuit() == suit);
-
-        return labelMatches && suitMatches;
+        return card.getSuit() == suit;
+    }
+    public Card checkTopCard() {
+        // Return the top card of the draw pile and discard it
+        Card card = DrawFromPile();
+        Discard(card);
+        return card;
     }
 }
