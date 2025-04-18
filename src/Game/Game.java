@@ -73,5 +73,21 @@ public class Game {
     public Queue<Player> getPlayers() {
         return players;
     }
+    public boolean hasVultureSam(){
+        for(Player player: players){
+            if(player.getCharacter() == Character.VULTURE_SAM){
+                return true;
+            }
+        }
+        return false;
+    }
+    public Player getVultureSam(){
+        for(Player player: players){
+            if(player.getCharacter() == Character.VULTURE_SAM){
+                return player;
+            }
+        }
+        return null;
+    }
 
 }

@@ -241,8 +241,8 @@ public abstract class Player {
             }
             else{
                 System.out.println("You are dead.");
-                isAlive = false;
                 reward(damageSource,role);
+                onElimination();
             }
         }
         health -= 1;
@@ -293,6 +293,32 @@ public abstract class Player {
                 removeEquipment(equipmentType);
             }
         }
+    }
+    public void onElimination(){
+        isAlive = false;
+        if(game.hasVultureSam()){
+            Player vultureSam = game.getVultureSam();
+            for(Card card: hand){
+                vultureSam.addToHand(card);
+            }
+            hand.clear();
+            for(Card card: equipmentTypeToCardMap.values()){
+                if(card != null){
+                    vultureSam.addToHand(card);
+                }
+            }
+        }
+        else{
+            //discard all cards
+            for(Card card : hand){
+                gameBoard.Discard(card);
+            }
+            hand.clear();
+            for(EquipmentType equipmentType : equipmentTypeToCardMap.keySet()){
+                removeEquipment(equipmentType);
+            }
+        }
+
     }
 
     //return false if player is failed to escape from jail
