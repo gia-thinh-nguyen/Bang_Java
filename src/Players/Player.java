@@ -1,11 +1,7 @@
 package Players;
 
 import Cards.Card;
-import Cards.Equipments.Dynamite;
 import Cards.Equipments.EquipmentType;
-import Cards.Equipments.Jail;
-import Cards.LABEL;
-import Cards.OtherCards.Gatling;
 import Cards.SUIT;
 import Game.GameBoard;
 import Game.Game;
@@ -65,20 +61,9 @@ public abstract class Player {
         for(Card card : hand){
             handString += card.toString() + ", ";
         }
-        String horseString = "";
-        if(attackHorse > 0){
-            horseString += "Attack Horse: " + attackHorse + ", ";
-        }
-        if(defenseHorse > 0){
-            horseString += "Defense Horse: " + defenseHorse + ", ";
-        }
         String sb = "Player:" + getName() + " " +
                 "Health:" + health + "/" + maxHealth + " " +
                 "Gun Range:" + gunRange + " " +
-                horseString+ " " +
-                "Barrel:" + hasBarrel() + " " +
-                "Dynamited:" + isDynamited() + " " +
-                "Jailed:" + isJailed() + " " +
                 "Role:" + role.toString() + " " +
                 "Character:" + character.toString() + "\n" +
                 "     Hand: " + handString+ "\n" +
@@ -252,14 +237,7 @@ public abstract class Player {
         health -= 1;
 
     }
-    public void playFistCardFromHand(String cardName){
-        for(Card card : hand){
-            if(card.getName().equals(cardName)){
-                card.played();
-                break;
-            }
-        }
-    }
+
     public void discardFirstCardFromHand(String cardName){
         for(Card card : hand){
             if(card.getName().equals(cardName)){
