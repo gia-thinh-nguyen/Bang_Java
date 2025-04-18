@@ -243,4 +243,39 @@ public class ActionMenu {
             return false;
         }
     }
+    public static Player showJesseJonesMenu(Player player){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Jesse Jones can steal a card or draw from the pile");
+        Map<Integer, Player> keyToPlayerMap = new HashMap<>();
+        keyToPlayerMap.put(1,null);
+        System.out.println("1. Draw from pile");
+        List<Player> players = new ArrayList<>(player.getPlayers());
+        int options = 2;
+        for(int i =1; i< players.size();i++){
+            Player p= players.get(i);
+            if(p.getHand().isEmpty()) continue;
+            keyToPlayerMap.put(options, p);
+            System.out.println(options + ". Steal from " + p.getName());
+            options++;
+        }
+        int key;
+        do {
+            key = scanner.nextInt();
+        } while (!keyToPlayerMap.containsKey(key));
+        return keyToPlayerMap.get(key);
+    }
+    public static Card showKitCarlsonMenu(Card[] drawnCards){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Kit Carlson choose a card to put back");
+        Map<Integer, Card> keyToCardMap = new HashMap<>();
+        for(int i=1; i<=drawnCards.length; i++){
+            keyToCardMap.put(i, drawnCards[i-1]);
+            System.out.println(i + ". " + drawnCards[i-1].toString());
+        }
+        int key;
+        do {
+            key = scanner.nextInt();
+        } while (!keyToCardMap.containsKey(key));
+        return keyToCardMap.get(key);
+    }
 }

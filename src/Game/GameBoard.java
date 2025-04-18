@@ -17,10 +17,9 @@ public class GameBoard {
         drawPile = new Stack<>();
         discardPile = new Stack<>();
         //shuffle first then add to draw pile
-//        ArrayList<Card> shuffledCards = new ArrayList<>(CardDatabase.cards);
-//        Collections.shuffle(shuffledCards);
-//        AddCardsToDrawPile(shuffledCards);
-        AddCardsToDrawPile(CardDatabase.cards);
+        ArrayList<Card> shuffledCards = new ArrayList<>(CardDatabase.cards);
+        Collections.shuffle(shuffledCards);
+        AddCardsToDrawPile(shuffledCards);
     }
     public void Discard(Card card){
         discardPile.push(card);
@@ -42,6 +41,9 @@ public class GameBoard {
         for(int i= cards.size(); i>0; i--){
             drawPile.push(cards.get(i-1));
         }
+    }
+    public void PutCardBack(Card card){
+        drawPile.push(card);
     }
 
     public Stack<Card> getDrawPile() {

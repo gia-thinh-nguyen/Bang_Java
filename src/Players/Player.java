@@ -120,6 +120,9 @@ public abstract class Player {
     public Role getRole(){
         return role;
     }
+    public int getHealth(){
+        return health;
+    }
     public ArrayList<Card> getHand(){
         return hand;
     }
@@ -384,7 +387,7 @@ public abstract class Player {
     public void discardPhase(){
         //discard phase
         //if hand size is greater than max health, discard a card
-        while(hand.size() > maxHealth){
+        while(hand.size() > health){
             System.out.println("You have to discard a card.");
             Card card = ActionMenu.showMenu(hand,false);
             if(card == null){

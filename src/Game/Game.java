@@ -20,7 +20,7 @@ public class Game {
     }
     public void PlayGame(){
         for(Player player: players){
-            player.draw(5);
+            player.draw(player.getHealth());
         }
         while(true){
             System.out.println("----------------------");
@@ -52,9 +52,9 @@ public class Game {
     }
     public void CreateAndAddPlayers(GameBoard gameBoard, Game game){
         players.add(new SuzyLafayette("1",game,gameBoard, Role.OUTLAW));
-        players.add(new BlackJack("2",game,gameBoard, Role.SHERIFF));
-        players.add(new ElGringo("3",game,gameBoard, Role.OUTLAW));
-        players.add(new BlackJack("4",game,gameBoard, Role.VICE));
+        players.add(new KitCarlson("2",game,gameBoard, Role.SHERIFF));
+        players.add(new JesseJones("3",game,gameBoard, Role.OUTLAW));
+        players.add(new WillyTheKid("4",game,gameBoard, Role.VICE));
         //sheriff plays first
         while(!this.players.peek().isSheriff()) {
             nextTurn();
