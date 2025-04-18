@@ -13,7 +13,7 @@ public abstract class Equipment extends Cards.Card {
 
     @Override
     public void played() {
-        getOwner().removeFromHand(this);
+        getOwner().removeFromHand(this,false);
         //cannot have duplicate equipments
         //if already have the same equipment type, discard the old one
         //keys initialized so always contains keys

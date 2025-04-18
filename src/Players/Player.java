@@ -156,6 +156,7 @@ public abstract class Player {
     public boolean isJailed(){
         return equipmentTypeToCardMap.get(EquipmentType.JAIL) != null;
     }
+
     public boolean hasCard(String cardName){
         for(Card card : hand){
             if(card.getName().equals(cardName)){
@@ -164,6 +165,23 @@ public abstract class Player {
         }
         return false;
     }
+    public int numMissedCards(){
+        int missedCount = 0;
+        for(Card card:hand){
+            if(card.getName().equals("Missed")){
+                missedCount++;
+            }
+        }
+        if(character == Character.CALAMITY_JANET){
+            for(Card card:hand){
+                if(card.getName().equals("Bang")){
+                    missedCount++;
+                }
+            }
+        }
+        return missedCount;
+    }
+
     public boolean almostDead(){
         return health <= 1;
     }
@@ -187,7 +205,7 @@ public abstract class Player {
     public void addToHand(Card card){
         hand.add(card);
     }
-    public void removeFromHand(Card card){
+    public void removeFromHand(Card card,boolean isInDiscardPhase){
         for (Card c : hand){
             if(c.equals(card)){
                 hand.remove(c);
@@ -233,7 +251,7 @@ public abstract class Player {
             success = gameBoard.checkTopCard(SUIT.HEART, false);
         }
         if(success){
-            System.out.println("Barrel activated. You are safe.");
+            System.out.println("Barrel activated.");
             return true;
         }
         else{
@@ -266,6 +284,13 @@ public abstract class Player {
                 gameBoard.Discard(card);
                 hand.remove(card);
                 break;
+            } else if (cardName.equals("Missed")&&card.getName().equals("Bang")
+                    && character == Character.CALAMITY_JANET) {
+                // If the card is "Bang" and the character is Calamity Janet, discard it
+                gameBoard.Discard(card);
+                hand.remove(card);
+                break;
+
             }
         }
     }
@@ -409,7 +434,7 @@ public abstract class Player {
             if(card == null){
                 break;
             }
-            removeFromHand(card);
+            removeFromHand(card,true);
             gameBoard.Discard(card);
         }
     }

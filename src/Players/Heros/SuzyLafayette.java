@@ -13,9 +13,9 @@ public class SuzyLafayette extends Player {
     }
     //Suzy Lafayette draw a card when her hand is empty
     @Override
-    public void removeFromHand(Card card) {
-        super.removeFromHand(card);
-        if (getHand().isEmpty() && getIsAlive()) {
+    public void removeFromHand(Card card, boolean isInDiscardPhase) {
+        super.removeFromHand(card,isInDiscardPhase);
+        if (!isInDiscardPhase && getHand().isEmpty() && getIsAlive()) {
             System.out.println("Suzy Lafayette has no cards in hand, drawing a card.");
             draw(1);
         }

@@ -62,55 +62,58 @@ public class ActionMenu {
         return keyToPlayerMap.get(key);
     }
     public static void showRespondToBangMenu(Player currentPlayer, Player target) {
+        handleBangResponse(currentPlayer, target, 1);
+    }
+
+    public static void showRespondToSTKBang(Player currentPlayer, Player target) {
+        handleBangResponse(currentPlayer, target, 2);
+    }
+
+    private static void handleBangResponse(Player currentPlayer, Player target, int missedCardsNeeded) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Player " + currentPlayer.getName() + " banged Player " + target.getName());
 
-        if(target.getCharacter()== Character.JOURDONNAIS){
-            System.out.println("Jourdonnais is checking barrel");
-            if(target.checkBarrel()){
-                return;
-            }
-        }
-        if(target.hasBarrel()){
-            System.out.println("Checking barrel...");
-            if(target.checkBarrel()){
-                return;
-            }
-        }
+        // Check barrels and reduce missed cards needed
+        missedCardsNeeded = checkBarrels(target, missedCardsNeeded);
+        if (missedCardsNeeded == 0) return;
 
+        // Display response options
         System.out.println("Respond: ");
         ArrayList<String> options = new ArrayList<>();
         options.add("1");
         System.out.println("1. Skip");
-        //if target has missed cards, add option to use them
-        if(target.hasCard("Missed")){
-            options.add("m");
-            System.out.println("m. Missed");
+        if (target.numMissedCards() >= missedCardsNeeded) {
+            options.add("2");
+            System.out.println("2. Play Missed");
         }
-        //if target is Calamity Janet, add option to use Bang
-        if(target.getCharacter() == Character.CALAMITY_JANET && target.hasCard("Bang")){
-            options.add("b");
-            System.out.println("b. Bang as Missed");
-        }
+
+        // Get user input
         String key;
         do {
             key = scanner.next();
         } while (!options.contains(key));
 
+        // Handle response
         if (key.equals("1")) {
-            // Take damage
             target.takeDamage(currentPlayer);
             System.out.println("Player " + target.getName() + " does not respond to bang and takes 1 damage.");
-        } else if (key.equals("m")) {
-            // Use Missed
-            target.discardFirstCardFromHand("Missed");
-            System.out.println("Player " + target.getName() + " uses Missed.");
+        } else {
+            while (missedCardsNeeded > 0) {
+                target.discardFirstCardFromHand("Missed");
+                System.out.println("Player " + target.getName() + " discard a Missed ");
+                missedCardsNeeded--;
+            }
         }
-        else if (key.equals("b")) {
-            // Use Bang as Missed
-            target.discardFirstCardFromHand("Bang");
-            System.out.println("Player " + target.getName() + " uses Bang as Missed.");
+    }
+
+    private static int checkBarrels(Player target, int missedCardsNeeded) {
+        if (target.getCharacter() == Character.JOURDONNAIS && target.checkBarrel()) {
+            missedCardsNeeded--;
         }
+        if (missedCardsNeeded > 0 && target.hasBarrel() && target.checkBarrel()) {
+            missedCardsNeeded--;
+        }
+        return missedCardsNeeded;
     }
     public static void showCatBalouMenu(Player target) {
         Scanner scanner = new Scanner(System.in);
@@ -161,6 +164,11 @@ public class ActionMenu {
                 options++;
                 System.out.println("2. Use Bang");
             }
+            // Calamity Janet can use Missed instead of Bang
+            if (currentPlayer.getCharacter() == Character.CALAMITY_JANET && currentPlayer.hasCard("Missed")) {
+                options++;
+                System.out.println("3. Use Missed To Duel");
+            }
 
             int key;
             do {
@@ -201,7 +209,12 @@ public class ActionMenu {
             System.out.println("1. Not drop Bang and lose 1 life");
             if (players.get(i).hasCard("Bang")) {
                 options++;
-                System.out.println("2. Drop Bang");
+                System.out.println("2. Drop Bang to respond Indiani");
+            }
+            //Calamity Janet can drop a Missed instead
+            if(players.get(i).getCharacter()== Character.CALAMITY_JANET && players.get(i).hasCard("Missed")){
+                options++;
+                System.out.println("3. Drop Missed");
             }
             int key;
             do {
@@ -215,6 +228,10 @@ public class ActionMenu {
                 // Use Bang
                 players.get(i).discardFirstCardFromHand("Bang");
                 System.out.println("Player " + players.get(i).getName() + " uses Bang to Indiani.");
+            } else if (key == 3) {
+                // Use Missed
+                players.get(i).discardFirstCardFromHand("Missed");
+                System.out.println("Player " + players.get(i).getName() + " uses Missed to Indiani.");
             }
         }
     }

@@ -6,6 +6,7 @@ import Cards.SUIT;
 import Cards.TargetType;
 import Game.ActionMenu;
 import Players.Player;
+import Players.Character;
 
 public class Bang extends Card {
     public Bang(LABEL label, SUIT suit) {
@@ -19,7 +20,13 @@ public class Bang extends Card {
         }
         super.played();
         Player target = ActionMenu.showTargetablePlayer(getOwner(), TargetType.BANG);
-        ActionMenu.showRespondToBangMenu(getOwner(), target);
+        boolean isSlabTheKiller = getOwner().getCharacter()== Character.SLAB_THE_KILLER;
+        if (isSlabTheKiller){
+            ActionMenu.showRespondToSTKBang(getOwner(), target);
+        }
+        else{
+            ActionMenu.showRespondToBangMenu(getOwner(),target);
+        }
         getOwner().setAlreadyBanged(true);
     }
 }

@@ -14,7 +14,7 @@ public class Jail extends Card {
 
     @Override
     public void played() {
-        getOwner().removeFromHand(this);
+        getOwner().removeFromHand(this,false);
         Player target = ActionMenu.showTargetablePlayer(getOwner(), TargetType.JAIL);
         target.addToEquipmentMap(EquipmentType.JAIL, this);
     }

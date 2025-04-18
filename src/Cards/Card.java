@@ -31,7 +31,7 @@ public abstract class Card {
         return name + " " + labelString + suitString;
     }
     public void played(){
-        owner.removeFromHand(this);
+        owner.removeFromHand(this,false);
         owner.getGameBoard().Discard(this);
     }
     public void setOwner(Player owner){
