@@ -14,7 +14,7 @@ public class Bang extends Card {
     @Override
     public void played() {
         if(!getOwner().BangUnlimited()&&getOwner().AlreadyBanged()){
-            System.out.println("Cannot Bang.");
+            System.out.println("Already played Bang this turn.");
             return;
         }
         super.played();

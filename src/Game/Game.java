@@ -52,8 +52,8 @@ public class Game {
     }
     public void CreateAndAddPlayers(GameBoard gameBoard, Game game){
         players.add(new SuzyLafayette("1",game,gameBoard, Role.OUTLAW));
-        players.add(new KitCarlson("2",game,gameBoard, Role.SHERIFF));
-        players.add(new JesseJones("3",game,gameBoard, Role.OUTLAW));
+        players.add(new PedroRamirez("2",game,gameBoard, Role.SHERIFF));
+        players.add(new CalamityJanet("3",game,gameBoard, Role.OUTLAW));
         players.add(new WillyTheKid("4",game,gameBoard, Role.VICE));
         //sheriff plays first
         while(!this.players.peek().isSheriff()) {

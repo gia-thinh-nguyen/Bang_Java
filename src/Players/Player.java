@@ -225,6 +225,22 @@ public abstract class Player {
         return gameBoard;
     }
 
+    public boolean checkBarrel(){
+        boolean success = gameBoard.checkTopCard(SUIT.HEART,false);
+        if(!success && character == Character.LUCKY_DUKE) {
+            // Lucky Duke gets a second chance
+            System.out.println("Lucky Duke gets a second chance!");
+            success = gameBoard.checkTopCard(SUIT.HEART, false);
+        }
+        if(success){
+            System.out.println("Barrel activated. You are safe.");
+            return true;
+        }
+        else{
+            System.out.println("Barrel failed.");
+            return false;
+        }
+    }
     public void takeDamage(Player damageSource){
         String damageSourceName = damageSource == null ? "dynamite" : damageSource.getName();
         System.out.println("Player "+name +" lose 1 health from " + damageSourceName + ".");

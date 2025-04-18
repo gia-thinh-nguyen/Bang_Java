@@ -42,6 +42,12 @@ public class GameBoard {
             drawPile.push(cards.get(i-1));
         }
     }
+    public Card DrawFromDiscard(){
+        if(discardPile.isEmpty()){
+            return null;
+        }
+        return discardPile.pop();
+    }
     public void PutCardBack(Card card){
         drawPile.push(card);
     }

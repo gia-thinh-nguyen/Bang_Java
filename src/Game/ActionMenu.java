@@ -67,13 +67,13 @@ public class ActionMenu {
 
         if(target.getCharacter()== Character.JOURDONNAIS){
             System.out.println("Jourdonnais is checking barrel");
-            if(checkBarrel(currentPlayer)){
+            if(target.checkBarrel()){
                 return;
             }
         }
         if(target.hasBarrel()){
             System.out.println("Checking barrel...");
-            if(checkBarrel(currentPlayer)){
+            if(target.checkBarrel()){
                 return;
             }
         }
@@ -87,7 +87,11 @@ public class ActionMenu {
             options.add("m");
             System.out.println("m. Missed");
         }
-
+        //if target is Calamity Janet, add option to use Bang
+        if(target.getCharacter() == Character.CALAMITY_JANET && target.hasCard("Bang")){
+            options.add("b");
+            System.out.println("b. Bang as Missed");
+        }
         String key;
         do {
             key = scanner.next();
@@ -101,6 +105,11 @@ public class ActionMenu {
             // Use Missed
             target.discardFirstCardFromHand("Missed");
             System.out.println("Player " + target.getName() + " uses Missed.");
+        }
+        else if (key.equals("b")) {
+            // Use Bang as Missed
+            target.discardFirstCardFromHand("Bang");
+            System.out.println("Player " + target.getName() + " uses Bang as Missed.");
         }
     }
     public static void showCatBalouMenu(Player target) {
@@ -225,24 +234,7 @@ public class ActionMenu {
             emporioCards.remove(chosenCard);
         }
     }
-    public static boolean checkBarrel(Player currentPlayer){
-        GameBoard gameBoard = currentPlayer.getGameBoard();
-        boolean success = gameBoard.checkTopCard(SUIT.HEART,false);
 
-        if (!success && currentPlayer.getCharacter() == Character.LUCKY_DUKE) {
-            // Lucky Duke gets a second chance
-            System.out.println("Lucky Duke gets a second chance!");
-            success = gameBoard.checkTopCard(SUIT.HEART, false);
-        }
-        if(success){
-            System.out.println("Barrel activated! You are safe.");
-             return true;
-        }
-        else{
-            System.out.println("Barrel failed!");
-            return false;
-        }
-    }
     public static Player showJesseJonesMenu(Player player){
         Scanner scanner = new Scanner(System.in);
         System.out.println("Jesse Jones can steal a card or draw from the pile");
@@ -277,5 +269,25 @@ public class ActionMenu {
             key = scanner.nextInt();
         } while (!keyToCardMap.containsKey(key));
         return keyToCardMap.get(key);
+    }
+    public static Card showPedroRamirezMenu(GameBoard gb){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Pedro Ramirez can draw a card from the discard pile");
+        int options = 1;
+        System.out.println("1. Draw from draw pile");
+        if(!gb.getDiscardPile().isEmpty()){
+            System.out.println("2. Draw from discard pile");
+            options++;
+        }
+        int key;
+        do {
+            key = scanner.nextInt();
+        } while (key < 1 || key > options);
+        if(key==1){
+            return gb.DrawFromPile();
+        }
+        else{
+            return gb.DrawFromDiscard();
+        }
     }
 }
