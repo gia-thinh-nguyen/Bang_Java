@@ -2,7 +2,10 @@ package Game;
 
 import Cards.Card;
 import Cards.CardDatabase;
+import Cards.LABEL;
+import Cards.SUIT;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Stack;
@@ -47,10 +50,15 @@ public class GameBoard {
     public Stack<Card> getDiscardPile() {
         return discardPile;
     }
-    public Card checkTopCard(){
-        //return the top card of the draw pile and discard it
-        Card card =DrawFromPile();
+    public boolean checkTopCard(LABEL label, SUIT suit) {
+        // Return the top card of the draw pile and discard it
+        Card card = DrawFromPile();
         Discard(card);
-        return card;
+
+        // Check based on non-null parameters
+        boolean labelMatches = (label == null) || (card.getLabel() == label);
+        boolean suitMatches = (suit == null) || (card.getSuit() == suit);
+
+        return labelMatches && suitMatches;
     }
 }

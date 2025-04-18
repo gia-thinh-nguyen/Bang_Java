@@ -3,7 +3,9 @@ package Game;
 import Cards.Card;
 import Cards.Equipments.Equipment;
 import Cards.Equipments.EquipmentType;
+import Cards.SUIT;
 import Cards.TargetType;
+import Players.Character;
 import Players.Player;
 
 import java.util.*;
@@ -63,18 +65,20 @@ public class ActionMenu {
     public static void showRespondToBangMenu(Player currentPlayer, Player target) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Player " + currentPlayer.getName() + " banged Player " + target.getName());
-        //if has barrel, check the top card to see if its suit is heart
-        if(currentPlayer.hasBarrel()){
-            System.out.println("Checking barrel...");
-            Card topCard = currentPlayer.getGameBoard().checkTopCard();
-            if(topCard.getSuit() == Cards.SUIT.HEART){
-                System.out.println("Barrel activated! You are safe.");
+
+        if(target.getCharacter()== Character.JOURDONNAIS){
+            System.out.println("Jourdonnais is checking barrel");
+            if(checkBarrel(currentPlayer)){
                 return;
-            }
-            else{
-                System.out.println("Barrel failed! You are hit.");
-            }
+            };
         }
+        if(target.hasBarrel()){
+            System.out.println("Checking barrel...");
+            if(checkBarrel(currentPlayer)){
+                return;
+            };
+        }
+
         System.out.println("Respond: ");
         ArrayList<String> options = new ArrayList<>();
         options.add("1");
@@ -248,5 +252,15 @@ public class ActionMenu {
             emporioCards.remove(chosenCard);
         }
     }
-
+    public static boolean checkBarrel(Player currentPlayer){
+        boolean success = currentPlayer.getGameBoard().checkTopCard(null, SUIT.HEART);
+        if(success){
+            System.out.println("Barrel activated! You are safe.");
+             return true;
+        }
+        else{
+            System.out.println("Barrel failed!");
+            return false;
+        }
+    }
 }

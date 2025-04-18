@@ -2,6 +2,8 @@ package Game;
 
 import Cards.Card;
 import Players.Character;
+import Players.Heros.Jourdonnais;
+import Players.Heros.WillyTheKid;
 import Players.Player;
 import Players.Role;
 
@@ -47,8 +49,8 @@ public class Game {
     }
     public void CreateAndAddPlayers(GameBoard gameBoard, Game game){
         players.add(new Player("1",game,gameBoard, Role.OUTLAW, Character.PAUL_REGRET));
-        players.add(new Player("2",game,gameBoard, Role.SHERIFF, Character.WILLY_THE_KID));
-        players.add(new Player("3",game,gameBoard, Role.OUTLAW, Character.JOURDONNAIS));
+        players.add(new WillyTheKid("2",game,gameBoard, Role.SHERIFF));
+        players.add(new Jourdonnais("3",game,gameBoard, Role.OUTLAW));
         players.add(new Player("4",game,gameBoard, Role.VICE, Character.ROSE_DOOLAN));
         //sheriff plays first
         while(!this.players.peek().isSheriff()) {

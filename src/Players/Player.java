@@ -121,6 +121,9 @@ public class Player {
     public String getName(){
         return name;
     }
+    public Character getCharacter(){
+        return character;
+    }
     public ArrayList<Card> getHand(){
         return hand;
     }
