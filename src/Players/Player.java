@@ -1,7 +1,11 @@
 package Players;
 
 import Cards.Card;
+import Cards.Equipments.Dynamite;
 import Cards.Equipments.EquipmentType;
+import Cards.Equipments.Jail;
+import Cards.LABEL;
+import Cards.OtherCards.Gatling;
 import Cards.SUIT;
 import Game.GameBoard;
 import Game.Game;
@@ -232,7 +236,7 @@ public abstract class Player {
 
     public void takeDamage(Player damageSource){
         String damageSourceName = damageSource == null ? "dynamite" : damageSource.getName();
-        System.out.println("You lose 1 health from " + damageSourceName + ".");
+        System.out.println("Player "+name +" lose 1 health from " + damageSourceName + ".");
         if(almostDead()){
             if(hasHealCards()){
                 System.out.println("Almost dead but you have heals.");
@@ -329,18 +333,21 @@ public abstract class Player {
         if(isDynamited()){
             //check for dynamite
             //if top card is 2 to 9 Spades, lose 3 health. Else pass the dynamite to the next player
-            Card topCard = gameBoard.checkTopCard();
-            SUIT suit = topCard.getSuit();
-            int label = topCard.getLabel().getValue();
-            if(suit == SUIT.SPADE && label >= 2 && label <= 9){
+            boolean dynamiteExploded = gameBoard.checkTopCard(null,true);
+            if(dynamiteExploded && character==Character.LUCKY_DUKE){
+                //Lucky Duke gets a second chance
+                System.out.println("Lucky Duke gets a second chance.");
+                dynamiteExploded = gameBoard.checkTopCard(null,true);
+            }
+            if(dynamiteExploded){
                 for(int i=0; i<3; i++){
                     takeDamage(null);
                 }
                 removeEquipment(EquipmentType.DYNAMITE);
-                System.out.println("Top card is " + topCard + ". You lose 3 health.");
+                System.out.println("Dynamite exploded.You lose 3 health.");
             }
             else{
-                System.out.println("Top card is " + topCard + ". Pass the dynamite to the next player.");
+                System.out.println("Pass the dynamite to the next player.");
                 //pass the dynamite to the next player
                 Card dynamite = equipmentTypeToCardMap.get(EquipmentType.DYNAMITE);
                 equipmentTypeToCardMap.put(EquipmentType.DYNAMITE,null);
@@ -350,7 +357,13 @@ public abstract class Player {
         if(isJailed()){
             //if jailed, check top card for a Heart. If failed, lose a turn and discard the jail
             removeEquipment(EquipmentType.JAIL);
-            boolean success = gameBoard.checkTopCardSuit(SUIT.HEART);
+            boolean success = gameBoard.checkTopCard(SUIT.HEART,false);
+            if (!success && character == Character.LUCKY_DUKE) {
+                // Lucky Duke gets a second chance
+                System.out.println("Lucky Duke gets a second chance!");
+                success = gameBoard.checkTopCard(SUIT.HEART, false);
+            }
+
             if(!success){
                 System.out.println("You are jailed. You lose a turn.");
                 return false;
@@ -362,8 +375,12 @@ public abstract class Player {
             }
         }
 
-        //draw 2 cards
-        draw(2);
+        //draw in the first phase
+        firstPhaseDraw();
         return true;
+    }
+    protected void firstPhaseDraw(){
+        //normal characters draw 2 cards
+        draw(2);
     }
 }

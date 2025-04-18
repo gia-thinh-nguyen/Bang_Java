@@ -226,7 +226,14 @@ public class ActionMenu {
         }
     }
     public static boolean checkBarrel(Player currentPlayer){
-        boolean success = currentPlayer.getGameBoard().checkTopCardSuit(SUIT.HEART);
+        GameBoard gameBoard = currentPlayer.getGameBoard();
+        boolean success = gameBoard.checkTopCard(SUIT.HEART,false);
+
+        if (!success && currentPlayer.getCharacter() == Character.LUCKY_DUKE) {
+            // Lucky Duke gets a second chance
+            System.out.println("Lucky Duke gets a second chance!");
+            success = gameBoard.checkTopCard(SUIT.HEART, false);
+        }
         if(success){
             System.out.println("Barrel activated! You are safe.");
              return true;

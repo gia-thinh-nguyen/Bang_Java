@@ -50,16 +50,18 @@ public class GameBoard {
     public Stack<Card> getDiscardPile() {
         return discardPile;
     }
-    public boolean checkTopCardSuit(SUIT suit) {
-        // Return the top card of the draw pile and discard it
+
+    public boolean checkTopCard(SUIT suit,boolean checkDynamite){
         Card card = DrawFromPile();
+        System.out.println("Top card: " + card);
+        SUIT topSuit= card.getSuit();
+        int topLabel = card.getLabel().getValue();
         Discard(card);
-        return card.getSuit() == suit;
-    }
-    public Card checkTopCard() {
-        // Return the top card of the draw pile and discard it
-        Card card = DrawFromPile();
-        Discard(card);
-        return card;
+        if(checkDynamite){
+            return topSuit==SUIT.SPADE && topLabel>=2 && topLabel<=9;
+        }
+        else{
+            return topSuit==suit;
+        }
     }
 }

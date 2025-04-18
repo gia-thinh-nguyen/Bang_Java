@@ -2,10 +2,7 @@ package Game;
 
 import Cards.Card;
 import Players.Character;
-import Players.Heros.Jourdonnais;
-import Players.Heros.PaulRegret;
-import Players.Heros.RoseDoolan;
-import Players.Heros.WillyTheKid;
+import Players.Heros.*;
 import Players.Player;
 import Players.Role;
 
@@ -53,10 +50,10 @@ public class Game {
         }
     }
     public void CreateAndAddPlayers(GameBoard gameBoard, Game game){
-        players.add(new PaulRegret("1",game,gameBoard, Role.OUTLAW));
-        players.add(new WillyTheKid("2",game,gameBoard, Role.SHERIFF));
-        players.add(new Jourdonnais("3",game,gameBoard, Role.OUTLAW));
-        players.add(new RoseDoolan("4",game,gameBoard, Role.VICE));
+        players.add(new BlackJack("1",game,gameBoard, Role.OUTLAW));
+        players.add(new BlackJack("2",game,gameBoard, Role.SHERIFF));
+        players.add(new ElGringo("3",game,gameBoard, Role.OUTLAW));
+        players.add(new BlackJack("4",game,gameBoard, Role.VICE));
         //sheriff plays first
         while(!this.players.peek().isSheriff()) {
             nextTurn();
@@ -89,5 +86,8 @@ public class Game {
         }
         return null;
     }
+    //to do:
+    //check if the game is over
+    //add discard phase
 
 }
