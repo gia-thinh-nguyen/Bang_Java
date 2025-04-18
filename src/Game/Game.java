@@ -5,13 +5,12 @@ import Players.Character;
 import Players.Player;
 import Players.Role;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
 public class Game {
-    private Queue<Player> players= new LinkedList<>();
-    private GameBoard gameBoard;
+    private final Queue<Player> players= new LinkedList<>();
+    private final GameBoard gameBoard;
     private Player currentPlayer= null;
     public Game() {
         gameBoard = new GameBoard();
@@ -19,7 +18,7 @@ public class Game {
     }
     public void PlayGame(){
         for(Player player: players){
-            player.draw(4);
+            player.draw(5);
         }
         while(true){
             System.out.println("----------------------");
@@ -32,10 +31,10 @@ public class Game {
             System.out.println("----------------------");
             if(players.peek()!=currentPlayer){
                 currentPlayer = players.peek();
-                currentPlayer.draw(2);
+                currentPlayer.firstPhase();
             }
             System.out.println("Current Player: " + players.peek());
-            Card chosenCard=ActionMenu.showMenu(players.peek().getHand());
+            Card chosenCard=ActionMenu.showMenu(players.peek().getHand(),false);
             //if chosenCard is null, skip
             if(chosenCard!=null){
                 chosenCard.played();
@@ -43,6 +42,7 @@ public class Game {
             else{
                 nextTurn();
             }
+
         }
     }
     public void CreateAndAddPlayers(GameBoard gameBoard, Game game){

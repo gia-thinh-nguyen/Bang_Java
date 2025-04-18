@@ -13,8 +13,13 @@ public class Bang extends Card {
     }
     @Override
     public void played() {
+        if(!getOwner().BangUnlimited()&&getOwner().AlreadyBanged()){
+            System.out.println("Cannot Bang.");
+            return;
+        }
         super.played();
         Player target = ActionMenu.showTargetablePlayer(getOwner(), TargetType.BANG);
         ActionMenu.showRespondToBangMenu(getOwner(), target);
+        getOwner().setAlreadyBanged(true);
     }
 }

@@ -5,7 +5,7 @@ import Cards.Equipments.EquipmentType;
 import Cards.LABEL;
 import Cards.SUIT;
 
-public class GunCard extends Equipment {
+public abstract class GunCard extends Equipment {
     private final int range;
 
     public GunCard(LABEL label, SUIT suit, String name, int range) {

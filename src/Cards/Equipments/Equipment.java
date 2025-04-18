@@ -4,7 +4,7 @@ import Cards.Card;
 import Cards.LABEL;
 import Cards.SUIT;
 
-public class Equipment extends Cards.Card {
+public abstract class Equipment extends Cards.Card {
     private EquipmentType equipmentType;
     public Equipment(LABEL label, SUIT suit, String name, EquipmentType equipmentType) {
         super(label, suit, name);

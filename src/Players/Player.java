@@ -22,6 +22,7 @@ public class Player {
     private Character character;
     private boolean isSheriff;
     private boolean bangUnlimited;
+    private boolean alreadyBanged;
     private boolean isAlive;
     private ArrayList<Card> hand;
     private HashMap<EquipmentType,Card> equipmentTypeToCardMap = new HashMap<>();
@@ -110,6 +111,9 @@ public class Player {
     public void setBangUnlimited(boolean bangUnlimited){
         this.bangUnlimited = bangUnlimited;
     }
+    public void setAlreadyBanged(boolean alreadyBanged){
+        this.alreadyBanged = alreadyBanged;
+    }
 
     public Queue<Player> getPlayers(){
         return game.getPlayers();
@@ -125,6 +129,12 @@ public class Player {
     }
     public int getHorse(){
         return horse;
+    }
+    public boolean BangUnlimited(){
+        return bangUnlimited;
+    }
+    public boolean AlreadyBanged(){
+        return alreadyBanged;
     }
     public boolean isSheriff(){
         return isSheriff;
@@ -159,6 +169,10 @@ public class Player {
         equipmentTypeToCardMap.put(equipmentType,null);
         //set to default values
         switch (equipmentType){
+            case GUN -> {
+                gunRange = 1;
+                setBangUnlimited(false);
+            }
             case HORSE -> horse = 0;
             case BARREL -> hasBarrel = false;
             case DYNAMITE -> isDynamited = false;
@@ -205,5 +219,11 @@ public class Player {
         Card card = hand.get(randomIndex);
         hand.remove(randomIndex);
         return card;
+    }
+
+    public void firstPhase(){
+        alreadyBanged = false;
+        //draw 2 cards
+        draw(2);
     }
 }

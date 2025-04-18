@@ -13,12 +13,16 @@ import java.util.Arrays;
 
 public class CardDatabase {
     public static final ArrayList<Card> cards = new ArrayList<>(Arrays.asList(
+            new Indiani(LABEL.JACK, SUIT.DIAMOND),
+            new Gatling(LABEL.TEN, SUIT.SPADE),
+            new Emporio(LABEL.KING, SUIT.SPADE),
             new Duel(LABEL.ACE, SUIT.SPADE),
             new Bang(LABEL.TWO, SUIT.HEART),
             new Bang(LABEL.THREE, SUIT.SPADE),
             new Bang(LABEL.FOUR, SUIT.DIAMOND),
             new Duel(LABEL.ACE, SUIT.SPADE),
             new Bang(LABEL.TWO, SUIT.HEART),
+            new Missed(LABEL.SIX, SUIT.SPADE),
             new Bang(LABEL.THREE, SUIT.SPADE),
             new Bang(LABEL.FOUR, SUIT.DIAMOND),
             new CatBalou(LABEL.FIVE, SUIT.HEART),

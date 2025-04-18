@@ -10,7 +10,7 @@ import java.util.*;
 
 public class ActionMenu {
 
-    public static Card showMenu(List<Card> hand) {
+    public static Card showMenu(List<Card> hand,boolean isEmporio) {
         Scanner scanner = new Scanner(System.in);
         Map<Integer, Card> keyToCardMap = new HashMap<>();
         int i;
@@ -18,8 +18,10 @@ public class ActionMenu {
             keyToCardMap.put(i, hand.get(i-1));
             System.out.println(i + ". " + hand.get(i-1).toString());
         }
-        keyToCardMap.put(i, null);
-        System.out.println(i + ". Skip");
+        if(!isEmporio){
+            keyToCardMap.put(i, null);
+            System.out.println(i + ". Skip");
+        }
         int key;
         do {
             key = scanner.nextInt();
@@ -196,4 +198,55 @@ public class ActionMenu {
             opponent = temp;
         }
     }
+    public static void showGatlingMenu(Player currentPlayer){
+        ArrayList<Player> players = new ArrayList<>(currentPlayer.getPlayers());
+        for(int i =1; i<players.size();i++){
+            showRespondToBangMenu(currentPlayer, players.get(i));
+        }
+    }
+    public static void showIndianiMenu(Player currentPlayer){
+        Scanner scanner = new Scanner(System.in);
+        //every other has to discard a bang or lose 1 life
+        ArrayList<Player> players = new ArrayList<>(currentPlayer.getPlayers());
+        System.out.println("Player " + currentPlayer.getName() + " plays Indiani");
+        for(int i=1;i<players.size();i++){
+            System.out.println("Player " + players.get(i).getName() + "respond to Indiani: ");
+            int options = 1;
+            System.out.println("1. Not drop Bang and lose 1 life");
+            if (players.get(i).hasCard("Bang")) {
+                options++;
+                System.out.println("2. Drop Bang");
+            }
+            int key;
+            do {
+                key = scanner.nextInt();
+            } while (key < 1 || key > options);
+            if (key == 1) {
+                // Fail to respond
+                players.get(i).takeDamage(currentPlayer, 1);
+                System.out.println("Player " + players.get(i).getName() + " fails to respond and takes 1 damage.");
+            } else if (key == 2) {
+                // Use Bang
+                players.get(i).discardFirstCardFromHand("Bang");
+                System.out.println("Player " + players.get(i).getName() + " uses Bang to Indiani.");
+            }
+        }
+    }
+    public static void showEmporioMenu(Player currentPlayer){
+        System.out.println("Player " + currentPlayer.getName() + " plays Emporio");
+        //Draw from pile as many as players, each player chooses one card to keep
+        ArrayList<Player> players = new ArrayList<>(currentPlayer.getPlayers());
+        GameBoard gameBoard = currentPlayer.getGameBoard();
+        ArrayList<Card> emporioCards = new ArrayList<>(players.size());
+        for(Player player : players){
+            emporioCards.add(gameBoard.DrawFromPile());
+        }
+        for (Player player : players) {
+            System.out.println("Player " + player.getName() + " choose a card to keep: ");
+            Card chosenCard = showMenu(emporioCards,true);
+            player.addToHand(chosenCard);
+            emporioCards.remove(chosenCard);
+        }
+    }
+
 }
